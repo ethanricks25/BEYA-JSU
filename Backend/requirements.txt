@@ -11,7 +11,7 @@ executing==2.0.1
 fastjsonschema==2.19.1
 idna==3.6
 ipykernel==6.29.0
-ipython==8.20.0
+ipython==8.0.0
 jedi==0.19.1
 jsonschema==4.21.0
 jsonschema-specifications==2023.12.1
