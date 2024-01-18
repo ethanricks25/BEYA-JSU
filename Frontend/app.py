@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 def resize_canvas(event):
@@ -14,7 +15,7 @@ def center_image():
     image_height = logo.height()
 
     x = (canvas_width - image_width) // 2
-    y = (canvas_height - image_height) // 2 -100
+    y = (canvas_height - image_height) // 2 - 100
     if root.attributes('-fullscreen'):
         # Center the image in full-screen mode
         x = (canvas_width - image_width) // 2
@@ -27,7 +28,7 @@ def below_image():
 
     x = (canvas_width) // 2
     y = (canvas_height) // 2 + 110
-    
+
     canvas.coords(btn_canvas, x, y)
 
 def create_rounded_button(image_size, text, radius):
@@ -50,6 +51,11 @@ def create_rounded_button(image_size, text, radius):
 
     return rounded_button_img
 
+def on_button_click():
+    notebook.tab(1, state='normal')  # Enable access to the second page
+    notebook.tab(0, state='disabled')  # Enable access to the second page
+    notebook.select(1)  # Switch to the second page
+
 # Create object
 root = Tk()
 
@@ -63,8 +69,12 @@ root.title("PRISM")
 p1 = PhotoImage(file='./img/p.png')
 root.iconphoto(False, p1)
 
-# Create a canvas with no border
-canvas = Canvas(root, bg='white', highlightthickness=0)
+# Create a notebook (tabbed layout)
+notebook = ttk.Notebook(root)
+
+## Welcome Page ##
+# Create a canvas with no border for the first page
+canvas = Canvas(notebook, bg='white', highlightthickness=0)
 canvas.pack(fill=BOTH, expand=YES)
 
 # Load an image in the script
@@ -77,8 +87,28 @@ image_on_canvas = canvas.create_image(0, 0, anchor=NW, image=logo)
 btn_image = create_rounded_button((150, 40), "Start", 20)
 
 # Create a transparent canvas item for the button
-btn = Button(root, image=btn_image, bd=0, command=lambda: print("Button Clicked"), bg='white')
+btn = Button(canvas, image=btn_image, bd=0, command=on_button_click, bg='white')
 btn_canvas = canvas.create_window(0, 0, window=btn, anchor="center")
+
+
+
+
+
+##Notebook navigation
+# Add the first page to the notebook
+notebook.add(canvas, text='Welcome')
+
+# Create a canvas with no border for the second page
+canvas2 = Canvas(notebook, bg='white', highlightthickness=0)
+
+
+##Page 2
+# Add the second page to the notebook with state='disabled'
+notebook.add(canvas2, text='Input Data', state='disabled')
+
+btn = Button(canvas2,text='TBD' , bg='white')
+btn_canvas2 = canvas2.create_window(100, 100, window=btn, anchor="center")
+
 
 # Bind the resize_canvas function to the window resize event
 root.bind("<Configure>", resize_canvas)
@@ -87,4 +117,5 @@ root.bind("<Configure>", resize_canvas)
 center_image()
 
 # Execute tkinter
+notebook.pack(fill=BOTH, expand=YES)
 root.mainloop()
