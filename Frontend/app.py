@@ -2,14 +2,12 @@
 from tkinter import *
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 from input import InputDataPage  # Import the InputDataPage class
-##DRAFT DISREGAURD
-##DRAFT DISREGAURD
 
 class WelcomePage(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
-        self.logo = ImageTk.PhotoImage(Image.open("./img/prismlogo.png"))
+        self.logo = ImageTk.PhotoImage(Image.open("./img/logos.png"))
         self.image_on_canvas = None
         self.btn_image = None
         self.create_widgets()
@@ -27,8 +25,12 @@ class WelcomePage(Frame):
         btn_label = Label(self.canvas, image=self.btn_image, bd=0, bg='white')
         btn_label.bind("<Button-1>", self.on_button_click)  # Bind the click event
 
-        # Create window for the Label
-        self.btn_canvas = self.canvas.create_window(0, 0, window=btn_label, anchor="center")
+        # Calculate the x-coordinate to center the button horizontally
+        canvas_width = self.canvas.winfo_width()
+        btn_x = (canvas_width) // 2
+
+        # Create window for the Label with the adjusted x-coordinate
+        self.btn_canvas = self.canvas.create_window(btn_x, 0, window=btn_label, anchor="center")
 
         self.canvas.bind("<Configure>", self.resize_canvas)
         self.center_image()
@@ -61,14 +63,22 @@ class WelcomePage(Frame):
         canvas_height = self.canvas.winfo_height()
 
         image_width = self.logo.width()
+        btn_width = self.btn_image.width()
         image_height = self.logo.height()
+        btn_height = self.btn_image.height()
+
 
         x = (canvas_width - image_width) // 2
-        y = (canvas_height - image_height) // 2 - 100
+        y_image = (canvas_height - image_height) // 2 - 80
+        y_btn = (canvas_height + image_height) // 2 - 30  # Adjust the vertical distance between image and button
+        x_btn = (canvas_width ) // 2  # Adjust the vertical distance between image and button
+
         if self.master.attributes('-fullscreen'):
-            x = (canvas_width - image_width) // 2
-            y = (canvas_height - image_height) // 2
-        self.canvas.coords(self.image_on_canvas, x, y)
+            y_image = (canvas_height - image_height) // 2
+            y_btn = (canvas_height + image_height) // 2 -10 # Adjust the vertical distance between image and button
+
+        self.canvas.coords(self.image_on_canvas, x, y_image)
+        self.canvas.coords(self.btn_canvas, x_btn, y_btn)
 
     def on_button_click(self, event):
         # Switch to the InputDataPage
@@ -80,9 +90,9 @@ if __name__ == "__main__":
     root = Tk()
 
     # Set the initial size
-    root.geometry("1000x800")
+    root.geometry("1000x700")
     root.configure(background='white')
-    root.minsize(1000, 800)
+    root.minsize(1000, 700)
 
     # Create welcome page
     welcome_page = WelcomePage(root)
