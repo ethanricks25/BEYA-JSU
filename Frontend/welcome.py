@@ -1,14 +1,12 @@
 # welcome_page.py
 from tkinter import *
 from PIL import Image, ImageTk, ImageDraw, ImageFont
-from input import InputDataPage  # Import the InputDataPage class
 
 class WelcomePage(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.master = master
         self.logo = ImageTk.PhotoImage(Image.open("./img/logos.png"))
-        self.image_on_canvas = None
         self.btn_image = None
         self.create_widgets()
 
@@ -67,35 +65,20 @@ class WelcomePage(Frame):
         image_height = self.logo.height()
         btn_height = self.btn_image.height()
 
-
         x = (canvas_width - image_width) // 2
         y_image = (canvas_height - image_height) // 2 - 80
         y_btn = (canvas_height + image_height) // 2 - 30  # Adjust the vertical distance between image and button
-        x_btn = (canvas_width ) // 2  # Adjust the vertical distance between image and button
+        x_btn = (canvas_width) // 2  # Adjust the vertical distance between image and button
 
-        if self.master.attributes('-fullscreen'):
+        if self.master.winfo_toplevel().attributes('-fullscreen'):
             y_image = (canvas_height - image_height) // 2
-            y_btn = (canvas_height + image_height) // 2 -10 # Adjust the vertical distance between image and button
+            y_btn = (canvas_height + image_height) // 2 - 10  # Adjust the vertical distance between image and button
 
         self.canvas.coords(self.image_on_canvas, x, y_image)
         self.canvas.coords(self.btn_canvas, x_btn, y_btn)
 
     def on_button_click(self, event):
         # Switch to the InputDataPage
-        self.destroy()  # Destroy the current page
-        input_data_page = InputDataPage(self.master)
-        input_data_page.pack(fill=BOTH, expand=YES)  # Show the InputDataPage
-
-if __name__ == "__main__":
-    root = Tk()
-
-    # Set the initial size
-    root.geometry("1000x700")
-    root.configure(background='white')
-    root.minsize(1000, 700)
-
-    # Create welcome page
-    welcome_page = WelcomePage(root)
-    welcome_page.pack(fill=BOTH, expand=YES)
-
-    root.mainloop()
+        self.master.master.notebook.select(1)  # Switch to the second page (index 1)
+        self.master.master.notebook.tab(1, state='normal')  # Enable access to the second page
+        self.master.master.notebook.tab(0, state='disabled')  # Enable access to the second page
