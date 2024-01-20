@@ -15,7 +15,10 @@ class MainApp(Tk):
         # Create a Notebook
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill=BOTH, expand=YES)
-
+        #giving title to the main window
+        self.title("PRISM")
+        p1 = PhotoImage(file='./img/sm.png')
+        self.iconphoto(False, p1)
         # Create welcome page
         welcome_page = WelcomePage(self.notebook)
         welcome_page.pack(fill=BOTH, expand=YES)
