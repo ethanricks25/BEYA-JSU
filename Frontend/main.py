@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import ttk
 from welcome import WelcomePage
 from inputStats import InputDataPage
-
+from stats import StatsPage
 class MainApp(Tk):
     def __init__(self):
         Tk.__init__(self)
@@ -28,7 +28,11 @@ class MainApp(Tk):
         input_data_page = InputDataPage(self.notebook)
         input_data_page.pack(fill=BOTH, expand=YES)
         self.notebook.add(input_data_page, text="Input Data",state='disabled')
-
+        # Create Stats Page
+        stats_page = StatsPage(self.notebook)
+        stats_page.pack(fill=BOTH, expand=YES)
+        self.notebook.add(stats_page, text="Input Stats",state='disabled')    
+          
         self.mainloop()
 
 if __name__ == "__main__":
