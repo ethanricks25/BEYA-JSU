@@ -1,8 +1,7 @@
 from tkinter import *
-from tkinter import font
-from tkinter import ttk
-from tkinter import filedialog  # Import filedialog module
+from tkinter import font,ttk,messagebox, filedialog
 from PIL import Image, ImageTk, ImageDraw, ImageFont
+import pandas as pd
 
 class StatsPage(ttk.Frame):
     def __init__(self, master):
@@ -56,7 +55,7 @@ class StatsPage(ttk.Frame):
         cloud_id = self.canvas.create_image(cloud_x, 193, anchor=NW, image=self.cloud)
          # Text
         # Create a label with Manrope font
-        sub_label = Label(self.canvas, text="Browse and chose the dataset you want to\n upload from your computer.\nStats files only.", font=self.subFont, bg='white', fg='#191D23')
+        sub_label = Label(self.canvas, text="Browse and chose the dataset you want to\n upload from your computer.\n CSV files only.", font=self.subFont, bg='white', fg='#191D23')
         sub_label.pack(pady=20, padx=0)
         sub_width = sub_label.winfo_reqwidth()
         sub_textx = image_id_x + (image_id_width - sub_width) // 2
@@ -65,7 +64,7 @@ class StatsPage(ttk.Frame):
         self.canvas.pack(fill=BOTH, expand=YES)
         
         # Attach Btn as a button
-        self.at_btn_command = lambda: self.attatch_file()  
+        self.at_btn_command = lambda: self.attach_file()  
         self.at_btn = Image.open('./img/attatch.png').resize((60, 60))
         self.at_btn = ImageTk.PhotoImage(self.at_btn)
         at_width = self.at_btn.width()
@@ -73,14 +72,26 @@ class StatsPage(ttk.Frame):
         self.at_btn_button = Button(self.canvas, image=self.at_btn, command=self.at_btn_command, borderwidth=0, highlightthickness=0)
         self.at_btn_button_window = self.canvas.create_window(at_btnx, 400, anchor=NW, window=self.at_btn_button)
 
-    def attatch_file(self):
-        # Open file dialog to choose a JSON file
-        file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+    def attach_file(self):
+        # Open file dialog to choose a CSV file
+        file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
         if file_path:
             print("Selected file:", file_path)
-            # Perform actions with the selected file, e.g., read the JSON content
-            with open(file_path, 'r') as file:
-                json_content = file.read()
-                print("JSON content:", json_content)
+            # Check if the file has the correct extension
+            if file_path.lower().endswith('.csv'):
+                # Perform actions with the selected file, e.g., read the CSV content
+                df = pd.read_csv(file_path)
+                print("CSV content:", df)
+            else:
+                # Notify user about the wrong file type
+                messagebox.showerror("Wrong File Type", "Please choose a CSV file.")
+            self.master.master.notebook.tab(3, state='normal')  # Enable access to the third page
+            self.master.master.notebook.tab(2, state='disabled')  # Enable access to the second page
+            self.master.master.notebook.tab(1, state='disabled')  # Enable access to the second page
+            self.master.master.notebook.tab(0, state='disabled')  # Enable access to the second page
+            self.master.master.notebook.select(3)  # Switch to the second page (index 1)
+        else:
+            # Notify user about not selecting any file
+            messagebox.showinfo("No File Selected", "You did not select any file.")
 
 # You can include other methods or modify the existing ones based on your needs

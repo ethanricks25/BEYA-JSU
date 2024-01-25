@@ -4,6 +4,9 @@ from tkinter import ttk
 from welcome import WelcomePage
 from inputStats import InputDataPage
 from stats import StatsPage
+from load import LoadData
+from fresults import Results
+
 class MainApp(Tk):
     def __init__(self):
         Tk.__init__(self)
@@ -32,7 +35,17 @@ class MainApp(Tk):
         stats_page = StatsPage(self.notebook)
         stats_page.pack(fill=BOTH, expand=YES)
         self.notebook.add(stats_page, text="Input Stats",state='disabled')    
+        
+        # Create SplashLoad Page
+        load_page = LoadData(self.notebook)
+        load_page.pack(fill=BOTH, expand=YES)
+        self.notebook.add(load_page, text="Loading",state='disabled')  
           
+        # Create Results Page
+        r_page = Results(self.notebook)
+        r_page.pack(fill=BOTH, expand=YES)
+        self.notebook.add(r_page, text="Results",state='disabled')    
+                               
         self.mainloop()
 
 if __name__ == "__main__":
