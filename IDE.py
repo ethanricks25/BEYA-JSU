@@ -3,8 +3,11 @@ from tkinter import filedialog, scrolledtext, ttk, messagebox
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+import subprocess
 import threading
 import os
+import sys
+import io
 
 class TextEditor:
     def __init__(self, root):
@@ -36,9 +39,18 @@ class TextEditor:
         self.top_text_area = scrolledtext.ScrolledText(left_pane, wrap=tk.WORD)
         left_pane.add(self.top_text_area, weight=1)  # Add top text area to left pane
 
-        # Bottom Text Area in Left Pane
-        self.bottom_text_area = scrolledtext.ScrolledText(left_pane, wrap=tk.WORD)
-        left_pane.add(self.bottom_text_area, weight=1)  # Add bottom text area to left pane
+        # Terminal in Bottom Left Pane
+        self.terminal = scrolledtext.ScrolledText(left_pane, wrap=tk.WORD)
+        self.terminal.bind('<Return>', self.execute_command)
+        left_pane.add(self.terminal, weight=1)  # Add terminal to left pane
+
+        # Terminal Prompt
+        self.terminal_prompt = ">>> "
+        self.terminal.insert(tk.END, self.terminal_prompt)
+
+        # Redirect stdout
+        self.original_stdout = sys.stdout
+        sys.stdout = self.OutputRedirector(self.terminal)
 
         # Right Text Area
         self.right_text_area = scrolledtext.ScrolledText(paned_window, wrap=tk.WORD)
@@ -102,6 +114,64 @@ class TextEditor:
     def run_background_job(self, job_func):
         # Function to run a job in the background
         threading.Thread(target=job_func).start()
+        
+    class OutputRedirector(object):
+        """ Custom output redirection for capturing or redirecting stdout. """
+        def __init__(self, text_widget):
+            self.text_widget = text_widget
+
+        def write(self, string):
+            self.text_widget.insert(tk.END, string)
+            self.text_widget.see(tk.END)
+
+        def flush(self):
+            pass
+        
+    def execute_command(self, event):
+        """ Execute the command entered in the terminal. """
+        full_command = self.terminal.get("end-2l linestart", "end-1c")
+        command = full_command.strip()
+
+        if command.startswith(self.terminal_prompt):
+            command = command[len(self.terminal_prompt):]  # Remove the prompt from command
+
+        self.terminal.insert(tk.END, '\n')  # Move to next line after command
+
+        if command:  # Check if command is not empty
+            # Determine if command is a Python command or a shell command
+            if command.startswith("!"):  # Prefix for shell commands
+                command = command[1:]  # Remove '!' from command
+                self.run_shell_command(command)
+            else:
+                self.run_python_command(command)
+
+        self.terminal.insert(tk.END, self.terminal_prompt)  # Add prompt for next command
+        return 'break'  # prevent the default return key behavior
+
+
+    def run_python_command(self, command):
+        """ Run a Python command. """
+        try:
+            exec(command, globals(), locals())
+        except Exception as e:
+            self.terminal.insert(tk.END, f'Error: {e}\n')
+
+
+    def run_shell_command(self, command):
+        """ Run a shell command in a separate thread. """
+        def run():
+            try:
+                result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                output = result.stdout
+            except subprocess.CalledProcessError as e:
+                output = f'Error: {e}\n{e.stderr}'
+            self.terminal.insert(tk.END, output + self.terminal_prompt)
+        threading.Thread(target=run).start()
+
+    def __del__(self):
+        # Restore stdout when the object is destroyed
+        sys.stdout = self.original_stdout
+
 
 # Create the main window
 root = tk.Tk()
