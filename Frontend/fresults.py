@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import font,ttk,messagebox, filedialog
+import tkinter as tk
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 class Results(ttk.Frame):
@@ -12,30 +13,22 @@ class Results(ttk.Frame):
         self.at_btn = None
         self.create_widgets()
 
-    def font_setup(self):
-        # Define Our Font
-        self.mainFont = font.Font(
-            family="Microsoft JhengHei Light",
-            size=20,
-            weight="normal",
-            slant="roman",
-            underline=0,
-            overstrike=0)
-        self.subFont = font.Font(
-                    family="Dubai Light",
-                    size=18,
-                    weight="normal",
-                    slant="roman",
-                    underline=0,
-                    overstrike=0)
-
+    
     def create_widgets(self):
-        # Call font_setup to load the font
-        self.font_setup()
-        self.canvas = Canvas(self, bg='white', highlightthickness=0)
-        # Create a label with Manrope font
-        label = Label(self.canvas, text="TBD", font=self.mainFont, bg='white', fg='#191D23')
-        label.pack(pady=20, side=TOP, padx=0)
-        # Create a window on the canvas and add the label to it
-        self.canvas.create_window(200, 100, window=label, anchor=NW)
+        window = tk.Tk()
+       # window.geometry('900x900')
+        #window.title('Tab Widget')
+
+        # Create a frame on the left side
+        left_frame = tk.Frame(window, width=400, height=400, bg='grey')
+        left_frame.grid(row=4, column=4, padx=20, pady=20, sticky='nsw')
+
+        # Create a frame in the bottom-left corner
+        bottom_left_frame = tk.Frame(window, width=400, height=400, bg='grey')
+        bottom_left_frame.grid(row=5, column=4, padx=20, pady=20, sticky='nsw')
+
+        # Create a frame on the right side
+        right_frame = tk.Frame(window, width=400, height=400, bg='grey')
+        right_frame.grid(row=4, column=5, padx=20, pady=20, sticky='nsw')
+
     

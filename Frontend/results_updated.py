@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import Listbox, END, Entry, Scrollbar
 import subprocess
+#Hannah page below
 
 class LeftFrame(tk.Frame):
     def __init__(self, master=None, **kwargs):
@@ -35,9 +36,8 @@ class App(tk.Tk):
         super().__init__(*args, **kwargs)
 
         self.title("Tkinter App")
-        self.geometry('900x900')
+        #self.geometry('900x900')
 
-       
         self.grid_columnconfigure(0, weight=1)  
         self.grid_columnconfigure(1, weight=1)  
         self.grid_rowconfigure(0, weight=1)
@@ -47,16 +47,13 @@ class App(tk.Tk):
         left_frame = LeftFrame(self)
         left_frame.grid(row=0, column=0, padx=20, pady=20, sticky='nsew')
 
-     
         bottom_right_frame = tk.Frame(self, width=400, height=400, bg='grey')
         bottom_right_frame.grid(row=1, column=0, padx=20, pady=20, sticky='nsew')
 
-        
-
-     
+    
         top_right_frame = tk.Frame(self, width=400, height=400, bg='grey')
         top_right_frame.grid(row=0, column=1, padx=20, pady=20, sticky='nsew')
 
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+# if __name__ == "__main__":
+#     app = App()
+#     app.mainloop()
