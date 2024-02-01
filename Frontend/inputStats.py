@@ -1,7 +1,5 @@
 from tkinter import *
-from tkinter import font
-from tkinter import ttk
-from tkinter import filedialog  # Import filedialog module
+from tkinter import font,ttk,messagebox, filedialog
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 class InputDataPage(ttk.Frame):
@@ -82,9 +80,13 @@ class InputDataPage(ttk.Frame):
             with open(file_path, 'r') as file:
                 json_content = file.read()
                 print("JSON content:", json_content)
-            self.master.master.notebook.select(2)  # Switch to the second page (index 1)
             self.master.master.notebook.tab(2, state='normal')  # Enable access to the second page
             self.master.master.notebook.tab(1, state='normal')  # Enable access to the second page
             self.master.master.notebook.tab(0, state='disabled')  # Enable access to the second page
+            self.master.master.notebook.select(2)  # Switch to the second page (index 1)
+        else:
+            # Notify the user that they uploaded an incorrect file type
+            messagebox.showerror("Error", "Please upload a JSON file.")
+
 
 # You can include other methods or modify the existing ones based on your needs
