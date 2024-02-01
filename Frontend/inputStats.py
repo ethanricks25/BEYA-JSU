@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import font,ttk,messagebox, filedialog
 from PIL import Image, ImageTk, ImageDraw, ImageFont
+import pandas as pd
 
 class InputDataPage(ttk.Frame):
     def __init__(self, master):
@@ -10,6 +11,7 @@ class InputDataPage(ttk.Frame):
         self.image = None
         self.cloud = None
         self.at_btn = None
+        self.df = None
         self.create_widgets()
 
     def font_setup(self):
@@ -54,7 +56,7 @@ class InputDataPage(ttk.Frame):
         cloud_id = self.canvas.create_image(cloud_x, 193, anchor=NW, image=self.cloud)
          # Text
         # Create a label with Manrope font
-        sub_label = Label(self.canvas, text="Browse and chose the dataset you want to\n upload from your computer.\nJSON files only.", font=self.subFont, bg='white', fg='#191D23')
+        sub_label = Label(self.canvas, text="Browse and chose the dataset you want to\n upload from your computer.\nCSV files only.", font=self.subFont, bg='white', fg='#191D23')
         sub_label.pack(pady=20, padx=0)
         sub_width = sub_label.winfo_reqwidth()
         sub_textx = image_id_x + (image_id_width - sub_width) // 2
@@ -73,20 +75,28 @@ class InputDataPage(ttk.Frame):
 
     def attatch_file(self):
         # Open file dialog to choose a JSON file
-        file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+        file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
         if file_path:
             print("Selected file:", file_path)
             # Perform actions with the selected file, e.g., read the JSON content
             with open(file_path, 'r') as file:
-                json_content = file.read()
-                print("JSON content:", json_content)
+                df = pd.read_csv(file_path)
+                print("JSON content:", df)
+                self.set_df(df)
             self.master.master.notebook.tab(2, state='normal')  # Enable access to the second page
             self.master.master.notebook.tab(1, state='normal')  # Enable access to the second page
             self.master.master.notebook.tab(0, state='disabled')  # Enable access to the second page
             self.master.master.notebook.select(2)  # Switch to the second page (index 1)
         else:
             # Notify the user that they uploaded an incorrect file type
-            messagebox.showerror("Error", "Please upload a JSON file.")
+            messagebox.showerror("Error", "Please upload a CSV file.")
+    
+    def get_df(self):
+        return self.df
+    
+    def set_df(self, df):
+        self.df = df
+    
 
 
 # You can include other methods or modify the existing ones based on your needs

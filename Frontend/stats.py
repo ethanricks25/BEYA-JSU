@@ -11,6 +11,7 @@ class StatsPage(ttk.Frame):
         self.image = None
         self.cloud = None
         self.at_btn = None
+        self.df = None
         self.create_widgets()
 
     def font_setup(self):
@@ -82,6 +83,7 @@ class StatsPage(ttk.Frame):
                 # Perform actions with the selected file, e.g., read the CSV content
                 df = pd.read_csv(file_path)
                 print("CSV content:", df)
+                self.set_df(df)
             else:
                 # Notify user about the wrong file type
                 messagebox.showerror("Wrong File Type", "Please choose a CSV file.")
@@ -93,5 +95,11 @@ class StatsPage(ttk.Frame):
         else:
             # Notify user about not selecting any file
             messagebox.showinfo("No File Selected", "You did not select any file.")
+
+    def get_df(self):
+        return self.df
+    
+    def set_df(self, df):
+        self.df = df
 
 # You can include other methods or modify the existing ones based on your needs
