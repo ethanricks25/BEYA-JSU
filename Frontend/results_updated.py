@@ -73,8 +73,3 @@ class WebViewWidget(Frame):
     def open_map(self):
         webbrowser.open(self.html_file_path)
 
-app = Tk()
-app.geometry("800x600")
-results_frame = ResultsFrame(app)
-results_frame.pack(fill=BOTH, expand=YES)
-app.mainloop()
