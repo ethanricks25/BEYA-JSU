@@ -5,7 +5,7 @@ from inputStats import InputDataPage
 from stats import StatsPage
 from load import LoadData
 from fresults import Results
-
+# from ide import TextEditor
 # Import the LeftFrame class
 from results_updated import ResultsFrame  # Replace 'your_module_name' with the actual module name
 
@@ -56,7 +56,12 @@ class MainApp(Tk):
         results_frame.pack(fill=BOTH, expand=YES)
         self.notebook.add(results_frame, text="Results", state='normal')  # Adjust the state as needed
 
+        # # Create TextEditor as a notebook page
+        # text_editor_frame = TextEditor(self.notebook)
+        # text_editor_frame.pack(fill=BOTH, expand=YES)
+        # self.notebook.add(text_editor_frame, text="Text Editor", state='normal')  # Adjust the state as needed
         self.mainloop()
-
+        
+        
 if __name__ == "__main__":
     app = MainApp()
