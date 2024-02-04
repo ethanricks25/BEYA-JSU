@@ -7,7 +7,7 @@ from load import LoadData
 from fresults import Results
 
 # Import the LeftFrame class
-from results_updated import LeftFrame  # Replace 'your_module_name' with the actual module name
+from results_updated import ResultsFrame  # Replace 'your_module_name' with the actual module name
 
 class MainApp(Tk):
     def __init__(self):
@@ -52,9 +52,9 @@ class MainApp(Tk):
 
         #Hannah page below
         # Create LeftFrame as a notebook page
-        left_frame = LeftFrame(self.notebook)
-        left_frame.pack(fill=BOTH, expand=YES)
-        self.notebook.add(left_frame, text="Left Frame", state='normal')  # Adjust the state as needed
+        results_frame = ResultsFrame(self.notebook)
+        results_frame.pack(fill=BOTH, expand=YES)
+        self.notebook.add(results_frame, text="Results", state='normal')  # Adjust the state as needed
 
         self.mainloop()
 
