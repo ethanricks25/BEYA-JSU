@@ -1,8 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 from welcome import WelcomePage
-from inputStats import InputDataPage
-from stats import StatsPage
+from hospDs import HospPage
+from modelDs import ModelPage
 from load import LoadData
 from fresults import Results
 # from ide import TextEditor
@@ -31,15 +31,15 @@ class MainApp(Tk):
         welcome_page.pack(fill=BOTH, expand=YES)
         self.notebook.add(welcome_page, text="Welcome")
 
-        # Create input data page
-        self.input_data_page = InputDataPage(self.notebook)
+        # Create hospDS  page
+        self.input_data_page = HospPage(self.notebook)
         self.input_data_page.pack(fill=BOTH, expand=YES)
-        self.notebook.add(self.input_data_page, text="Input Data", state='disabled')
+        self.notebook.add(self.input_data_page, text="Hospital Dataset ", state='disabled')
 
-        # Create Stats Page
-        self.stats_page = StatsPage(self.notebook)
+        # Create modelDs Page
+        self.stats_page = ModelPage(self.notebook)
         self.stats_page.pack(fill=BOTH, expand=YES)
-        self.notebook.add(self.stats_page, text="Input Stats", state='disabled')    
+        self.notebook.add(self.stats_page, text="Model Training Dataset", state='disabled')    
         
         # Create SplashLoad Page
         load_page = LoadData(self.notebook)

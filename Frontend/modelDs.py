@@ -3,7 +3,7 @@ from tkinter import font,ttk,messagebox, filedialog
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 import pandas as pd
 
-class StatsPage(ttk.Frame):
+class ModelPage(ttk.Frame):
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -36,7 +36,7 @@ class StatsPage(ttk.Frame):
         self.font_setup()
         self.canvas = Canvas(self, bg='white', highlightthickness=0)
         # Create a label with Manrope font
-        label = Label(self.canvas, text="Input Stats Data", font=self.mainFont, bg='white', fg='#191D23')
+        label = Label(self.canvas, text="Input Census Data", font=self.mainFont, bg='white', fg='#191D23')
         label.pack(pady=20, side=TOP, padx=0)
         # Create a window on the canvas and add the label to it
         self.canvas.create_window(200, 100, window=label, anchor=NW)
@@ -56,7 +56,7 @@ class StatsPage(ttk.Frame):
         cloud_id = self.canvas.create_image(cloud_x, 193, anchor=NW, image=self.cloud)
          # Text
         # Create a label with Manrope font
-        sub_label = Label(self.canvas, text="Browse and chose the dataset you want to\n upload from your computer.\n CSV files only.", font=self.subFont, bg='white', fg='#191D23')
+        sub_label = Label(self.canvas, text="Browse and chose the dataset you want to\n upload from your computer.\n Census CSV files only.", font=self.subFont, bg='white', fg='#191D23')
         sub_label.pack(pady=20, padx=0)
         sub_width = sub_label.winfo_reqwidth()
         sub_textx = image_id_x + (image_id_width - sub_width) // 2
