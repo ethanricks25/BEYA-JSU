@@ -1,10 +1,24 @@
+import tkinter as tk
+from tkinter import END
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, scrolledtext
 from tkintermapview import TkinterMapView  # Import TkinterMapView
 import pandas as pd
 import find_hospitals
+import subprocess
+import threading
+import sys
 
+class StdoutRedirector(object):
+    def __init__(self, text_widget):
+        self.text_widget = text_widget
 
+    def write(self, string):
+        self.text_widget.insert(tk.END, string)
+        self.text_widget.see(tk.END)  # Scroll to the bottom
+
+    def flush(self):
+        pass  # This might be called by some print statements, so it's safe to include it.
 class ResultsFrame(ttk.Frame):
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
@@ -12,6 +26,13 @@ class ResultsFrame(ttk.Frame):
         self.inputStats_df = None
         self.stats_df = None
         self.create_widgets()
+        self.original_stdout = sys.stdout  # Keep track of the original stdout, so you can restore it later
+        self.original_stderr = sys.stderr  # Keep track of the original stderr
+
+        self.stdout_redirector = StdoutRedirector(self.terminal)
+        sys.stdout = self.stdout_redirector
+        sys.stderr = self.stdout_redirector
+
 
     def create_widgets(self):
         style = ttk.Style()
@@ -62,7 +83,52 @@ class ResultsFrame(ttk.Frame):
         # Add TkinterMapView to frame3
         self.map_view = TkinterMapView(frame3)
         self.map_view.pack(expand=YES, fill=BOTH)
+        
+        # Add terminal setup here
+        self.terminal = scrolledtext.ScrolledText(frame1, wrap="word", height=10)
+        self.terminal.pack(expand=True, fill="both")
+        self.terminal_prompt = ">>> "
+        self.terminal.insert("end", self.terminal_prompt)
+
+        # Bind the Return key to execute_command function
+        self.terminal.bind('<Return>', self.execute_command)
     
+    def execute_command(self, event):
+        full_command = self.terminal.get("end-2l linestart", "end-1c")
+        command = full_command.strip()[len(self.terminal_prompt):]
+
+        self.terminal.insert("end", '\n')  # Move to next line after command
+
+        if command.startswith("!"):
+            self.run_shell_command(command[1:])  # Shell command
+        else:
+            self.run_python_command(command)  # Python command
+
+        self.terminal.insert("end", self.terminal_prompt)  # Add prompt for next command
+        return 'break'  # Prevent default 'Return' key behavior
+
+    def run_python_command(self, command):
+        # Ensure the command is correctly formatted
+        command = command.strip()
+        if not command:
+            return  # Avoid executing empty commands
+        
+        # Execute the command within a defined global context
+        try:
+            exec(command, globals(), locals())
+        except Exception as e:
+            self.terminal.insert("end", f'Error: {e}\n')
+
+    def run_shell_command(self, command):
+        def run():
+            try:
+                result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                output = result.stdout
+            except subprocess.CalledProcessError as e:
+                output = f'Error: {e}\n{e.stderr}'
+            self.terminal.insert("end", output + self.terminal_prompt)
+        threading.Thread(target=run).start()
+
     def set_dfs(self, df1, df2):
         self.inputStats_df = df1
         self.stats_df = df2
@@ -123,10 +189,6 @@ class ResultsFrame(ttk.Frame):
         top_left = (max(hospital_data.iloc[:]["lat"]) + .15, min(hospital_data.iloc[:]["lng"]) - .15)
         self.map_view.fit_bounding_box( top_left , bottom_right )
         
-
-    
-
-    
-
-
-# Rest of your code...
+    def __del__(self):
+        sys.stdout = self.original_stdout
+        sys.stderr = self.original_stderr
