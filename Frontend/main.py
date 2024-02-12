@@ -55,7 +55,7 @@ class MainApp(Tk):
         # Create LeftFrame as a notebook page
         self.results_frame = ResultsFrame(self.notebook)
         self.results_frame.pack(fill=BOTH, expand=YES)
-        self.notebook.add(self.results_frame, text="Results", state='normal')  # Adjust the state as needed
+        self.notebook.add(self.results_frame, text="Results", state='disabled')  # Adjust the state as needed
 
         self.notebook.bind("<<NotebookTabChanged>>", self.handle_tab_change)
         # # Create TextEditor as a notebook page

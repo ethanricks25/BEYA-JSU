@@ -8,7 +8,6 @@ import find_hospitals
 import subprocess
 import threading
 import sys
-
 class StdoutRedirector(object):
     def __init__(self, text_widget):
         self.text_widget = text_widget
@@ -19,6 +18,7 @@ class StdoutRedirector(object):
 
     def flush(self):
         pass  # This might be called by some print statements, so it's safe to include it.
+
 class ResultsFrame(ttk.Frame):
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
@@ -34,15 +34,50 @@ class ResultsFrame(ttk.Frame):
         sys.stderr = self.stdout_redirector
 
 
+
+class StdoutRedirector(object):
+    def __init__(self, text_widget):
+        self.text_widget = text_widget
+
+    def write(self, string):
+        self.text_widget.insert(tk.END, string)
+        self.text_widget.see(tk.END)  # Scroll to the bottom
+
+    def flush(self):
+        pass  # This might be called by some print statements, so it's safe to include it.
+
+class ResultsFrame(ttk.Frame):
+    def __init__(self, master):
+        ttk.Frame.__init__(self, master)
+        self.master = master
+        self.inputStats_df = None
+        self.stats_df = None
+        self.create_widgets()
+        self.original_stdout = sys.stdout  # Keep track of the original stdout, so you can restore it later
+        self.original_stderr = sys.stderr  # Keep track of the original stderr
+
+        self.stdout_redirector = StdoutRedirector(self.terminal)
+        sys.stdout = self.stdout_redirector
+        sys.stderr = self.stdout_redirector
+
     def create_widgets(self):
         style = ttk.Style()
         style.configure('My.TFrame', background='white', borderwidth=2, relief='solid')
+
         # Create a container frame to center everything
         container_frame = ttk.Frame(self)
         container_frame.pack(expand=YES, fill=BOTH, anchor=CENTER, padx=50, pady=50)
 
-        # Create the first column with two frames
-        column1_frame = ttk.Frame(container_frame)
+        # Create a notebook widget
+        notebook = ttk.Notebook(container_frame)
+        notebook.pack(expand=YES, fill=BOTH)
+
+        # Create the first tab
+        tab1 = ttk.Frame(notebook)
+        notebook.add(tab1, text="Notes")
+
+        # Create the first column with two frames inside tab1
+        column1_frame = ttk.Frame(tab1)
         column1_frame.pack(side=LEFT, padx=(0, 10), expand=YES, fill=BOTH)
 
         frame1 = ttk.Frame(column1_frame, style='My.TFrame')
@@ -55,7 +90,7 @@ class ResultsFrame(ttk.Frame):
         frame1['height'] = 280  # Adjust the height as needed
 
         # Simple terminal (Text widget)
-        terminal = Text(frame1, wrap=WORD, height=10, width=30)
+        terminal = Text(frame1, wrap=WORD, height=10, width=30)  # Adjust width here
         terminal.pack(expand=YES, fill=BOTH)
 
         frame2 = ttk.Frame(column1_frame, style='My.TFrame')
@@ -67,8 +102,8 @@ class ResultsFrame(ttk.Frame):
         frame2['width'] = 300  # Adjust the width as needed
         frame2['height'] = 280  # Adjust the height as needed
 
-        # Create the second column with one frame
-        column2_frame = ttk.Frame(container_frame)
+        # Create the second column with one frame inside tab1
+        column2_frame = ttk.Frame(tab1)
         column2_frame.pack(side=LEFT, expand=YES, fill=BOTH)
 
         frame3 = ttk.Frame(column2_frame, style='My.TFrame')
@@ -83,16 +118,16 @@ class ResultsFrame(ttk.Frame):
         # Add TkinterMapView to frame3
         self.map_view = TkinterMapView(frame3)
         self.map_view.pack(expand=YES, fill=BOTH)
-        
+
         # Add terminal setup here
-        self.terminal = scrolledtext.ScrolledText(frame1, wrap="word", height=10)
+        self.terminal = scrolledtext.ScrolledText(frame1, wrap="word", height=10, width=30)  # Adjust width here
         self.terminal.pack(expand=True, fill="both")
         self.terminal_prompt = ">>> "
         self.terminal.insert("end", self.terminal_prompt)
 
         # Bind the Return key to execute_command function
         self.terminal.bind('<Return>', self.execute_command)
-    
+
     def execute_command(self, event):
         full_command = self.terminal.get("end-2l linestart", "end-1c")
         command = full_command.strip()[len(self.terminal_prompt):]
