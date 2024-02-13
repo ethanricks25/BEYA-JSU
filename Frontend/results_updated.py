@@ -137,6 +137,7 @@ class ResultsFrame(ttk.Frame):
         #self.notebook.select(0)
         self.master.master.notebook.tab(0, state='normal')  # Enable access to the fifth page
         self.master.master.notebook.tab(4, state='disabled')  # Disable access to the fourth page
+        self.master.master.notebook.tab(3, state='disabled')  # Disable access to the fourth page
         self.master.master.notebook.select(0)
         
 

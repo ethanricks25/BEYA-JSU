@@ -57,13 +57,15 @@ class LoadData(Frame):
         self.canvas.coords(self.image_on_canvas, imgx, imgy)
 
     def check_condition(self):
-        # Check the condition for starting the timer and switching to the next page
-        if (
-            self.master.master.notebook.index(self.master.master.notebook.select()) == 3
-            and not self.timer_running
-        ):
-            self.start_timer()
-            return
+        # Check if the page is selected in the notebook
+        selected_index = self.master.master.notebook.index(self.master.master.notebook.select())
+        if selected_index == 3:
+            # Only start the timer if it's not already running
+            if not self.timer_running:
+                self.start_timer()
+        else:
+            # Stop the timer if the page is not selected
+            self.timer_running = False
         # Continue checking periodically
         self.after(100, self.check_condition)
 
