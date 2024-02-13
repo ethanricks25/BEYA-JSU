@@ -68,13 +68,17 @@ class ResultsFrame(ttk.Frame):
         container_frame = ttk.Frame(self)
         container_frame.pack(expand=YES, fill=BOTH, anchor=CENTER, padx=50, pady=50)
 
+        # Add a button to switch to tab0
+        switch_tab_button = ttk.Button(container_frame, text="Try Again", command=self.switch_to_tab0)
+        switch_tab_button.pack(anchor=NE, padx=10, pady=0.1)
+
         # Create a notebook widget
-        notebook = ttk.Notebook(container_frame)
-        notebook.pack(expand=YES, fill=BOTH)
+        self.notebook = ttk.Notebook(container_frame)
+        self.notebook.pack(expand=YES, fill=BOTH)
 
         # Create the first tab
-        tab1 = ttk.Frame(notebook)
-        notebook.add(tab1, text="Notes")
+        tab1 = ttk.Frame(self.notebook)
+        self.notebook.add(tab1, text="Notes")
 
         # Create the first column with two frames inside tab1
         column1_frame = ttk.Frame(tab1)
@@ -127,6 +131,14 @@ class ResultsFrame(ttk.Frame):
 
         # Bind the Return key to execute_command function
         self.terminal.bind('<Return>', self.execute_command)
+
+
+    def switch_to_tab0(self):
+        #self.notebook.select(0)
+        self.master.master.notebook.tab(0, state='normal')  # Enable access to the fifth page
+        self.master.master.notebook.tab(4, state='disabled')  # Disable access to the fourth page
+        self.master.master.notebook.select(0)
+        
 
     def execute_command(self, event):
         full_command = self.terminal.get("end-2l linestart", "end-1c")
