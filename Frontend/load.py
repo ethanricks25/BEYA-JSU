@@ -8,7 +8,7 @@ class LoadData(Frame):
         self.master = master
         self.logo = Image.open('./img/logonw.png').resize((600, 260))
         self.logo = ImageTk.PhotoImage(self.logo)
-        self.gif1 = Image.open('./img/prism.gif')
+        self.gif1 = Image.open('./img/pbg.gif')
         self.gif2 = Image.open('./img/sp.gif')  # Path to your second GIF
         self.gif_frames1 = [ImageTk.PhotoImage(self.gif_frame) for self.gif_frame in ImageSequence.Iterator(self.gif1)]
         self.gif_frames2 = [ImageTk.PhotoImage(self.gif_frame) for self.gif_frame in ImageSequence.Iterator(self.gif2)]
@@ -83,5 +83,5 @@ class LoadData(Frame):
     def start_timer(self):
         # Start the timer
         self.timer_running = True
-        self.after(4000, self.switch_to_input_page)
+        self.after(15000, self.switch_to_input_page)
 
