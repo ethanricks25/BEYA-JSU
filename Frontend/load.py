@@ -83,5 +83,5 @@ class LoadData(Frame):
     def start_timer(self):
         # Start the timer
         self.timer_running = True
-        self.after(15000, self.switch_to_input_page)
+        self.after(10000, self.switch_to_input_page)
 
