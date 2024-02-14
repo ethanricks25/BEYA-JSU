@@ -105,6 +105,8 @@ class ResultsFrame(ttk.Frame):
         frame2.grid_columnconfigure(0, weight=1)
         frame2['width'] = 300  # Adjust the width as needed
         frame2['height'] = 280  # Adjust the height as needed
+        self.label = tk.Label(frame2, text="The underrepresented population is: ")
+        self.label.pack()
 
         # Create the second column with one frame inside tab1
         column2_frame = ttk.Frame(tab1)
@@ -228,6 +230,7 @@ class ResultsFrame(ttk.Frame):
         print("Comparison of datasets complete!")
         print("The underrepresented population is: ")
         print(underrepresented_race)
+        self.label.config(text=self.label.cget("text") + underrepresented_race.capitalize() + " Americans")
         return ( disparity_dict, underrepresented_race, disparity_dict[underrepresented_race] )
     
     def update_map(self, hospital_data):
